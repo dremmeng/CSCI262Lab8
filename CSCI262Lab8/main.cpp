@@ -22,16 +22,37 @@ public:
 };
 
 // TODO: put your recursive functions here (or prototypes for them)
-void readtree(ifstream file)
+node* readtree(ifstream& file)
 {
-    node root;
+    node* root = new node;
     string str;
     getline(file, str);
     string child = str.substr(str.find(' '));
     string word = str.substr(0, str.find(' '));
-    root.data = word;
-    if (child.find('R') == string::npos)
+    root->data = word;
+    
+    if (child.find('L') != string::npos)
+    {
+        root->left = readtree(file);
+    }
+    if (child.find('R') != string::npos)
+    {
+        root->right = readtree(file);
+    }
+    return root;
 
+}
+
+void printtree(node *tree)
+{
+    if (tree == NULL)
+    {
+        return;
+    }
+    printtree(tree->left);
+    cout << tree->data << " ";
+    
+    printtree(tree->right);
 }
 
 // This program is simple enough to do the user interface in main()
@@ -47,11 +68,11 @@ int main() {
 	return -1;
     }
 
-    readtree(fin);
+    node* tree = readtree(fin);
     
     fin.close();
 
-    // TODO: call your recursive function to print out the tree
+    printtree(tree);
 
     return 0;
 }
